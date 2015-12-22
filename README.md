@@ -5,8 +5,11 @@ In this module, I use tweepy to query the Twitter API for tweets with certain ke
 
 ## Requirements:
 *Tweepy* http://www.tweepy.org/
+
 *Pickle*
+
 *Common Library*: I created a common library where I stored terms and keyword lists that I used.
+
 *Twitter Keys*: The file stores all of the specific access keys I need.
 
 ## Background:
