@@ -42,15 +42,12 @@ def get_tweets_and_reply(keyword, count, latest_date_id, respond_to_retweets):
 
 	# Search for tweets with keword since given date
 	last_tweet_date = str(DATABASE['date_of_last_tweet']['datetime'])
-	LOGGER.info("Searching for tweets "
-							"with keyword '{kw}' since {date}".format(kw=keyword, 
-																												date=last_tweet_date))
+	LOGGER.info("Searching for tweets with keyword '{kw}' since {date}".format(kw=keyword, date=last_tweet_date))
 	twts = api.search(q=keyword, count=count, since_id=latest_date_id)  
 	LOGGER.info("API Search Finished")
 	# if no tweets found
 	if len(twts) == 0:
-		LOGGER.info("No tweets with keyword '{kw}' "
-								"found since {date}".format(kw=keyword, date=last_tweet_date))
+		LOGGER.info("No tweets with keyword '{kw}' found since {date}".format(kw=keyword, date=last_tweet_date))
 		return
 	# Iterate over found tweets
 	LOGGER.info("Iterating over {num} tweets".format(num=len(twts)))
@@ -177,8 +174,7 @@ def open_database(database_name, api):
 	if not DATABASE.has_key('date_of_last_tweet'):
 		last_tweet_obj = get_last_tweet_data(api)
 		DATABASE['date_of_last_tweet'] = {}
-		DATABASE['date_of_last_tweet']['datetime'] = (datetime.datetime.now() - 
-																									datetime.timedelta(days=1))
+		DATABASE['date_of_last_tweet']['datetime'] = (datetime.datetime.now() - datetime.timedelta(days=1))
 		DATABASE['date_of_last_tweet']['tweet_id'] = last_tweet_obj.id
 	if not DATABASE.has_key('users_we_tweeted_to'):
 		DATABASE['users_we_tweeted_to'] = []
