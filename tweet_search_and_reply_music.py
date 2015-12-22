@@ -232,7 +232,7 @@ def tweet_qualifies_for_reply(twt, retweets_allowed=True):
       LOGGER.info("tweet is a RT. Ignoring.")
       return False
 
-  # Check to see if tweet already exists
+  # Check to see if tweet already exists in the database
   if DATABASE.has_key(str(twt.id)):
     print "id {} already exists".formatted(str(twt.id))
     LOGGER.info("tweet already exists. Ignoring.")
