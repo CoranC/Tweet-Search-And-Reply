@@ -28,14 +28,14 @@ def get_tweets_and_reply(keyword, count, latest_date_id, respond_to_retweets):
     latest_date_id (int) An int representing the latest tweet date id
     respond_to_retweets (bool) Whether to respond to retweets or not
 
-  Returns void
+  Returns None
   """
   set_up_logger()
   LOGGER.info("Starting get_tweets_and_reply()")
 
   api = login_to_api()
   if not api:
-    return
+    raise Exception("Can't log in to API")
 
   # Search for tweets with keword since given date
   last_tweet_date = str(DATABASE['date_of_last_tweet']['datetime'])
@@ -65,8 +65,6 @@ def get_tweets_and_reply(keyword, count, latest_date_id, respond_to_retweets):
       LOGGER.info("Can't print text from tweet due to unicode error.")
     LOGGER.info("Replied message {}".format(reply_obj['reply'], 
                                             reply_obj['username']))
-  return
-
 
 def remove_username_from_tweet(twt_text):
   """
@@ -79,7 +77,6 @@ def remove_username_from_tweet(twt_text):
   """
   return re.sub("@\w+\s", "", twt_text)
 
-
 def send_friend_request(api, username):
   """
   Creates a friend request using the API
@@ -88,11 +85,9 @@ def send_friend_request(api, username):
     api (obj) The API object
     username (string) The username of the user the request goes to
 
-  Returns void
+  Returns None
   """
   api.create_friendship(username)
-  return
-
 
 def tweet_reply(api, reply, tweet_id):
   """
@@ -103,11 +98,10 @@ def tweet_reply(api, reply, tweet_id):
     reply (string) The reply text to send
     tweet_id (int) The tweet id to identify the original tweet
 
-  Returns void
+  Returns None
   """
   api.update_status(status=reply, in_reply_to_status_id=tweet_id)
   return
-
 
 def set_up_logger():
   """
@@ -115,7 +109,7 @@ def set_up_logger():
 
   Args:
 
-  Returns void
+  Returns None
   """
   log_file = common.LOG_NAME
   # Empty log file.
@@ -127,8 +121,6 @@ def set_up_logger():
   formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
   fh.setFormatter(formatter)
   LOGGER.addHandler(fh)
-  return
-
 
 def login_to_api():
   """
@@ -147,7 +139,6 @@ def login_to_api():
     return
   return tweepy.API(auth)
 
-
 def open_database(database_name, api):
   """
   Opens database or creates an empty database using pickle.
@@ -155,7 +146,7 @@ def open_database(database_name, api):
   Args:
     database_name (string) The name to identy the database file
 
-  Returns void
+  Returns None
   """
   try:
     with open(database_name, 'r') as f:
@@ -175,8 +166,6 @@ def open_database(database_name, api):
     DATABASE["users_we_tweeted_to"] = []
   if not DATABASE.has_key("last_tweet_we_tweeted"):
     DATABASE["last_tweet_we_tweeted"] = last_tweet_obj.text
-  return
-
 
 def update_database(twt, reply_obj):
   """
@@ -186,7 +175,7 @@ def update_database(twt, reply_obj):
     twt (obj) The tweet object that we are replying to
     reply_obj (obj) The reply object holding the message, username and tweet_id
 
-  Returns void
+  Returns None
   """
   # Log creation date and latest date for visual comparison
   print "twt.created_at: {}".format(twt.created_at)
@@ -214,8 +203,6 @@ def update_database(twt, reply_obj):
   DATABASE["users_we_tweeted_to"].append(twt.user.screen_name)
   DATABASE["last_tweet_we_tweeted"] = message_text
   print "Added id {} to database".format(str(twt.id))
-  return
-
 
 def tweet_qualifies_for_reply(twt, retweets_allowed=True):
   """
@@ -292,7 +279,6 @@ def generate_reply_obj(twt):
     }
   return reply_obj
 
-
 def close_database(database_name):
   """
   Closes and updates pickle database.
@@ -300,7 +286,7 @@ def close_database(database_name):
   Args:
     database_name (string) The name of the database
   
-  Returns: void
+  Returns: None
   """
   with open(database_name, 'w') as f:
     pickle.dump(DATABASE, f)
@@ -310,7 +296,7 @@ def print_database_data_to_screen():
   """
   Prints the contents of the database to the screen
   
-  Returns: void
+  Returns: None
   """
   open_database(common.DATABASE_NAME)
   for item, value in DATABASE.iteritems():
@@ -322,7 +308,7 @@ def get_last_tweet_data(api):
   """
   Gets the latest tweet data
   
-  Returns: void
+  Returns: None
   """
   # http://docs.tweepy.org/en/latest/api.html#API.user_timeline
   latest_tweets = api.user_timeline(id = api.me().id, count = 1)
